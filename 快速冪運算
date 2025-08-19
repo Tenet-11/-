@@ -1,0 +1,16 @@
+快速冪運算(進階)
+
+// exp=exponent的縮寫
+int mod_pow(int base, long long exp) {
+	long long result = 1 % Mod;
+	long long b = base % Mod;
+
+	while (exp > 0) {
+		if (exp & 1LL) {
+			result = (result * b) % Mod;
+		}
+		b = (b * b) % Mod;
+		exp >>= 1;
+	}
+	return (int)result;
+}
