@@ -1,0 +1,13 @@
+string binary(int n) {
+    string res = "";
+    if (n == 0) return "0"; 
+
+    while (n > 0) {
+        // 把 bit 插到字串前面
+        //res = "1" + "01" = "101"
+        res = char('0' + (n % 2)) + res; 
+
+        n /= 2;
+    }
+    return res;
+}
