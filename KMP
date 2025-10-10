@@ -1,0 +1,73 @@
+// 母字串中找子字串 KMP
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// 建next陣列
+vector<int>build_next(const string& patt) {
+	// 這是KMP中核心觀念 : next 數組
+	vector<int>next;
+	next.push_back(0);
+	int prefix_len = 0;
+	int index = 1;
+
+	while (index < patt.size()) {
+		if (patt[prefix_len] == patt[index]) {
+			prefix_len++;
+			next.push_back(prefix_len);
+			index++;
+		}
+		else {
+			if (prefix_len > 0) {
+				prefix_len = next[prefix_len - 1];
+			}
+			else {
+				next.push_back(0);
+				index++;
+			}
+		}
+	}
+	return next;
+}
+
+int kmp_search(const string& s, const string& patt) {
+	if (patt.empty())return 0;
+	vector<int>next = build_next(patt);
+
+	int i = 0;
+	int j = 0;
+	while (i < s.size()) {
+		if (s[i] == patt[j]) {
+			i++;
+			j++;
+			if (j == patt.size())return i - j; // 匹配成功
+		}
+		else if (j > 0) {
+			j = next[j - 1];
+		}
+		else {
+			i++;
+		}
+	}
+	return -1; //找不到
+}
+
+int main() {
+	string T = "ABABACABAABCABABACA";
+	string P = "ABABACA";
+
+	int pos = kmp_search(T, P); // T是母字串，P是子字串
+
+	cout << "Text:      " << T << "\n";
+	cout << "Pattern:   " << P << "\n";
+	cout << "Match at:  " << pos << "\n";   // -1 表示找不到
+
+	// 額外：印出 next陣列，方便核對
+	auto lps = build_next(P);
+	cout << "next/lps:  ";
+	for (int x : lps) cout << x << ' ';
+	cout << "\n";
+	return 0;
+	
+}
